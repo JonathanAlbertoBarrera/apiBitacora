@@ -6,10 +6,10 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "alumnos")
-public class Alumno implements Serializable {
+public class Usuario implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id_alumno;
+    private Long id_usuario;
 
     private String matricula;
     private String nombre;
