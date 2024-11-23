@@ -18,12 +18,12 @@ public class Usuario implements Serializable {
     private String rol;
     private boolean estatus;
 
-    public Long getId_alumno() {
-        return id_alumno;
+    public Long getId_usuario() {
+        return id_usuario;
     }
 
-    public void setId_alumno(Long id_alumno) {
-        this.id_alumno = id_alumno;
+    public void setId_usuario(Long id_usuario) {
+        this.id_usuario = id_usuario;
     }
 
     public String getMatricula() {
