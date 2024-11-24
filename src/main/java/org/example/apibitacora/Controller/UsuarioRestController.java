@@ -35,6 +35,13 @@ public class UsuarioRestController {
         return response;
     }
 
+    //OBTENER USUARIO MEDIANTE SU CORREO
+    @GetMapping("/usuarios/{correo}")
+    public ResponseEntity<UsuarioResponseRest> getUsuarioByCorreo(@PathVariable String correo){
+        ResponseEntity<UsuarioResponseRest> response=service.getUsuarioByCorreo(correo);
+        return response;
+    }
+
     //CREAR USUARIO
     @PostMapping("/usuarios")
     public ResponseEntity<UsuarioResponseRest> crearUsuario(@RequestBody Usuario usuario){

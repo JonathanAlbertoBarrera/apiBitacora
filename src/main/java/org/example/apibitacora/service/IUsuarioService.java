@@ -8,6 +8,7 @@ public interface IUsuarioService {
     public ResponseEntity<UsuarioResponseRest> getAllUsuarios();
     public ResponseEntity<UsuarioResponseRest> getAllUsuariosSinAdmin();
     public ResponseEntity<UsuarioResponseRest> getAllUsuariosActivos();
-    //agregar por id
+    public ResponseEntity<UsuarioResponseRest> getUsuarioByCorreo(String correo);
+
     public ResponseEntity<UsuarioResponseRest> crearUsuario(Usuario usuario);
 }

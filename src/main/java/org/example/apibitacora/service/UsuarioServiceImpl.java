@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UsuarioServiceImpl implements IUsuarioService{
@@ -78,7 +79,35 @@ public class UsuarioServiceImpl implements IUsuarioService{
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    //CREAR UN USUARIO
+    //OBTENER USUARIO MEDIANTE SU CORREO
+    @Override
+    @Transactional(readOnly = true)
+    public ResponseEntity<UsuarioResponseRest> getUsuarioByCorreo(String correo) {
+        UsuarioResponseRest response = new UsuarioResponseRest();
+
+        try {
+            Optional<Usuario> usuarioOptional = usuarioDao.findByCorreo(correo);
+
+            if (usuarioOptional.isPresent()) {
+                // Si el usuario existe
+                List<Usuario> usuarios = new ArrayList<>();
+                usuarios.add(usuarioOptional.get());
+                response.getUsuarioResponse().setUsuario(usuarios);
+                response.setMetada("Ok", "00", "Usuario por correo encontrado");
+                return new ResponseEntity<>(response, HttpStatus.OK);
+            } else {
+                // Si no se encontró el usuario
+                response.setMetada("No encontrado", "01", "Usuario no encontrado con el correo: " + correo);
+                return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            // Manejo de excepciones generales
+            response.setMetada("Error", "-1", "Error al buscar el usuario");
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
     @Override
     @Transactional
     public ResponseEntity<UsuarioResponseRest> crearUsuario(Usuario usuario) {
@@ -86,26 +115,33 @@ public class UsuarioServiceImpl implements IUsuarioService{
         List<Usuario> list = new ArrayList<>();
 
         try {
+            // Verificar si el correo ya está en uso
+            Optional<Usuario> usuarioExistente = usuarioDao.findByCorreo(usuario.getCorreo());
+            if (usuarioExistente.isPresent()) {
+                response.setMetada("Error", "-1", "El correo ya está en uso");
+                return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+            }
+
             // Encriptar la contraseña
             usuario.setContrasenia(encryptPassword(usuario.getContrasenia()));
 
+            // Guardar el usuario
             Usuario usuarioGuardado = usuarioDao.save(usuario);
             if (usuarioGuardado != null) {
                 list.add(usuarioGuardado);
                 response.getUsuarioResponse().setUsuario(list);
-                response.setMetada("Respuesta OK", "00", "Usuario creado exitosamente");
+                response.setMetada("Respuesta OK", "00", "si Usuario creado exitosamente");
             } else {
                 response.setMetada("Respuesta No Creada", "-1", "Usuario no creado");
                 return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
-        } catch (DataIntegrityViolationException e) {
-            response.setMetada("Error", "-1", "El correo ya está en uso");
-            return new ResponseEntity<>(response, HttpStatus.CONFLICT);
         } catch (Exception e) {
             response.setMetada("Error", "-1", "Error al guardar el usuario");
             e.printStackTrace();
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
 }
