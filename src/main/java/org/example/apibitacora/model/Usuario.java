@@ -10,7 +10,7 @@ public class Usuario implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id_usuario;
-
+    @Column(name = "matricula", unique = true, nullable = false)
     private String matricula;
     @Column(name = "correo", unique = true, nullable = false)
     private String correo;

@@ -16,4 +16,6 @@ public interface IUsuarioDao extends JpaRepository<Usuario,String> {
     List<Usuario> getAllUsuariosSinAdmin();
 
     public Optional<Usuario> findByCorreo(String correo);
+
+    public Optional<Usuario> findByMatricula(String matricula);
 }

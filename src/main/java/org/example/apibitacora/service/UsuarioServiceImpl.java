@@ -162,9 +162,16 @@ public class UsuarioServiceImpl implements IUsuarioService{
 
         try {
             // Verificar si el correo ya está en uso
-            Optional<Usuario> usuarioExistente = usuarioDao.findByCorreo(usuario.getCorreo());
-            if (usuarioExistente.isPresent()) {
+            Optional<Usuario> usuarioExistenteCorreo = usuarioDao.findByCorreo(usuario.getCorreo());
+            if (usuarioExistenteCorreo.isPresent()) {
                 response.setMetada("Error", "-1", "El correo ya está en uso");
+                return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+            }
+
+            // Verificar si la matrícula ya está en uso
+            Optional<Usuario> usuarioExistenteMatricula = usuarioDao.findByMatricula(usuario.getMatricula());
+            if (usuarioExistenteMatricula.isPresent()) {
+                response.setMetada("Error", "-1", "La matrícula ya está en uso");
                 return new ResponseEntity<>(response, HttpStatus.CONFLICT);
             }
 
@@ -176,7 +183,7 @@ public class UsuarioServiceImpl implements IUsuarioService{
             if (usuarioGuardado != null) {
                 list.add(usuarioGuardado);
                 response.getUsuarioResponse().setUsuario(list);
-                response.setMetada("Respuesta OK", "00", "si Usuario creado exitosamente");
+                response.setMetada("Respuesta OK", "00", "Usuario creado exitosamente");
             } else {
                 response.setMetada("Respuesta No Creada", "-1", "Usuario no creado");
                 return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
@@ -189,6 +196,7 @@ public class UsuarioServiceImpl implements IUsuarioService{
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
 
 
 
