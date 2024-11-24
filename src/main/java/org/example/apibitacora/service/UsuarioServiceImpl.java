@@ -2,6 +2,7 @@ package org.example.apibitacora.service;
 
 import org.example.apibitacora.model.Usuario;
 import org.example.apibitacora.model.dao.IUsuarioDao;
+import org.example.apibitacora.model.dto.UsuarioDTO;
 import org.example.apibitacora.response.UsuarioResponseRest;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -198,6 +199,72 @@ public class UsuarioServiceImpl implements IUsuarioService{
     }
 
 
+    //ACTUALIZAR USUARIO SOLO EN LOS CAMPOS QUE ES POSIBLE CAMBIAR
+    @Override
+    @Transactional
+    public ResponseEntity<UsuarioResponseRest> actualizarUsuario(Long id, UsuarioDTO usuarioDTO) {
+        UsuarioResponseRest response = new UsuarioResponseRest();
+        List<Usuario> list = new ArrayList<>();
+
+        try {
+            // Buscar el usuario a actualizar
+            Optional<Usuario> usuarioExistente = usuarioDao.findById(id);
+            if (usuarioExistente.isEmpty()) {
+                response.setMetada("Error", "-1", "Usuario no encontrado");
+                return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            }
+
+            Usuario usuario = usuarioExistente.get();
+
+            // Verificar si la matrícula ha cambiado y está presente en el JSON
+            if (usuarioDTO.getMatricula() != null && !usuario.getMatricula().equals(usuarioDTO.getMatricula())) {
+                Optional<Usuario> usuarioConMismaMatricula = usuarioDao.findByMatricula(usuarioDTO.getMatricula());
+                if (usuarioConMismaMatricula.isPresent()) {
+                    response.setMetada("Error", "-1", "La matrícula ya está en uso");
+                    return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+                }
+                usuario.setMatricula(usuarioDTO.getMatricula()); // Actualizar solo si es válida
+            }
+
+            // Verificar si el correo ha cambiado y está presente en el JSON
+            if (usuarioDTO.getCorreo() != null && !usuario.getCorreo().equals(usuarioDTO.getCorreo())) {
+                Optional<Usuario> usuarioConMismoCorreo = usuarioDao.findByCorreo(usuarioDTO.getCorreo());
+                if (usuarioConMismoCorreo.isPresent()) {
+                    response.setMetada("Error", "-1", "El correo ya está en uso");
+                    return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+                }
+                usuario.setCorreo(usuarioDTO.getCorreo()); // Actualizar solo si es válido
+            }
+
+            // Actualizar los campos restantes del usuario
+            if (usuarioDTO.getNombre() != null) {
+                usuario.setNombre(usuarioDTO.getNombre());
+            }
+            if (usuarioDTO.getCarrera() != null) {
+                usuario.setCarrera(usuarioDTO.getCarrera());
+            }
+            if (usuarioDTO.getGrado_grupo() != null) {
+                usuario.setGrado_grupo(usuarioDTO.getGrado_grupo());
+            }
+
+            // Guardar el usuario actualizado
+            Usuario usuarioGuardado = usuarioDao.save(usuario);
+            if (usuarioGuardado != null) {
+                list.add(usuarioGuardado);
+                response.getUsuarioResponse().setUsuario(list);
+                response.setMetada("Respuesta OK", "00", "Usuario actualizado exitosamente");
+            } else {
+                response.setMetada("Respuesta No Actualizada", "-1", "Usuario no actualizado");
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+            }
+        } catch (Exception e) {
+            response.setMetada("Error", "-1", "Error al actualizar el usuario");
+            e.printStackTrace();
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 
 
 }

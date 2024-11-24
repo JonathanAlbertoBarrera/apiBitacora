@@ -1,6 +1,7 @@
 package org.example.apibitacora.Controller;
 
 import org.example.apibitacora.model.Usuario;
+import org.example.apibitacora.model.dto.UsuarioDTO;
 import org.example.apibitacora.response.UsuarioResponseRest;
 import org.example.apibitacora.service.IUsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,4 +57,10 @@ public class UsuarioRestController {
         return response;
     }
 
+    //ACTUALIZAR USUARIO
+    @PutMapping("/usuarios/{id}")
+    public ResponseEntity<UsuarioResponseRest> actualizarUsuario(@PathVariable Long id, @RequestBody UsuarioDTO usuarioDTO){
+        ResponseEntity<UsuarioResponseRest> response=service.actualizarUsuario(id,usuarioDTO);
+        return  response;
+    }
 }

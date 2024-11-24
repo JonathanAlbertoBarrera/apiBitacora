@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 import java.util.Optional;
 
-public interface IUsuarioDao extends JpaRepository<Usuario,String> {
+public interface IUsuarioDao extends JpaRepository<Usuario,Long> {
 
     @Query("SELECT u FROM Usuario u WHERE u.estatus = true AND u.rol!='Administrador' ")
     List<Usuario> getAllUsuariosActivos();
@@ -18,4 +18,5 @@ public interface IUsuarioDao extends JpaRepository<Usuario,String> {
     public Optional<Usuario> findByCorreo(String correo);
 
     public Optional<Usuario> findByMatricula(String matricula);
+
 }
