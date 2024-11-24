@@ -42,6 +42,13 @@ public class UsuarioRestController {
         return response;
     }
 
+    //INICIAR SESION
+    @PostMapping("/login")
+    public ResponseEntity<UsuarioResponseRest> iniciarSesion(@RequestParam String correo, @RequestParam String contrasenia) {
+        ResponseEntity<UsuarioResponseRest> response=service.iniciarSesion(correo,contrasenia);
+        return response;
+    }
+
     //CREAR USUARIO
     @PostMapping("/usuarios")
     public ResponseEntity<UsuarioResponseRest> crearUsuario(@RequestBody Usuario usuario){

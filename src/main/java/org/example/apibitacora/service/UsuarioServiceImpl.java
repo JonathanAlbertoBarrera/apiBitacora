@@ -107,6 +107,52 @@ public class UsuarioServiceImpl implements IUsuarioService{
         }
     }
 
+    /**
+     * Método privado para verificar la contraseña ingresada contra la almacenada.
+     */
+    private boolean checkPassword(String rawPassword, String encryptedPassword) {
+        // Comparar usando BCrypt o el método de encriptación que uses
+        return BCrypt.checkpw(rawPassword, encryptedPassword);
+    }
+
+    //PARA INICIAR SESION
+    @Override
+    @Transactional(readOnly = true)
+    public ResponseEntity<UsuarioResponseRest> iniciarSesion(String correo, String contrasenia) {
+        UsuarioResponseRest response = new UsuarioResponseRest();
+        try {
+            // Buscar el usuario por correo
+            Optional<Usuario> usuarioOptional = usuarioDao.findByCorreo(correo);
+
+            if (usuarioOptional.isPresent()) {
+                Usuario usuario = usuarioOptional.get();
+
+                // Verificar la contraseña
+                if (checkPassword(contrasenia, usuario.getContrasenia())) {
+                    // Si las credenciales son correctas, construir la respuesta
+                    List<Usuario> usuarios = new ArrayList<>();
+                    usuarios.add(usuario);
+
+                    response.getUsuarioResponse().setUsuario(usuarios);
+                    response.setMetada("Ok", "00", "Inicio de sesión exitoso");
+                    return new ResponseEntity<>(response, HttpStatus.OK);
+                } else {
+                    // Contraseña incorrecta
+                    response.setMetada("Error", "-1", "Contraseña incorrecta");
+                    return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+                }
+            } else {
+                // Usuario no encontrado
+                response.setMetada("Error", "-1", "Usuario no encontrado");
+                return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            // Manejo de errores generales
+            response.setMetada("Error", "-1", "Error al iniciar sesión");
+            e.printStackTrace();
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
     @Override
     @Transactional
@@ -143,5 +189,7 @@ public class UsuarioServiceImpl implements IUsuarioService{
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+
 
 }

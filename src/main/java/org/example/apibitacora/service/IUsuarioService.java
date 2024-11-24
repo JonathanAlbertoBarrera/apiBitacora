@@ -10,5 +10,6 @@ public interface IUsuarioService {
     public ResponseEntity<UsuarioResponseRest> getAllUsuariosActivos();
     public ResponseEntity<UsuarioResponseRest> getUsuarioByCorreo(String correo);
 
+    public ResponseEntity<UsuarioResponseRest> iniciarSesion(String correo, String contrasenia);
     public ResponseEntity<UsuarioResponseRest> crearUsuario(Usuario usuario);
 }
