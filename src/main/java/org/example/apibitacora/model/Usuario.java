@@ -12,9 +12,12 @@ public class Usuario implements Serializable {
     private Long id_usuario;
 
     private String matricula;
+    @Column(name = "correo", unique = true, nullable = false)
+    private String correo;
     private String nombre;
     private String carrera;
     private String grado_grupo;
+    private String contrasenia;
     private String rol;
     private boolean estatus;
 
@@ -32,6 +35,14 @@ public class Usuario implements Serializable {
 
     public void setMatricula(String matricula) {
         this.matricula = matricula;
+    }
+
+    public String getCorreo() {
+        return correo;
+    }
+
+    public void setCorreo(String correo) {
+        this.correo = correo;
     }
 
     public String getNombre() {
@@ -56,6 +67,14 @@ public class Usuario implements Serializable {
 
     public void setGrado_grupo(String grado_grupo) {
         this.grado_grupo = grado_grupo;
+    }
+
+    public String getContrasenia() {
+        return contrasenia;
+    }
+
+    public void setContrasenia(String contrasenia) {
+        this.contrasenia = contrasenia;
     }
 
     public String getRol() {
