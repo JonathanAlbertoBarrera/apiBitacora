@@ -63,4 +63,13 @@ public class UsuarioRestController {
         ResponseEntity<UsuarioResponseRest> response=service.actualizarUsuario(id,usuarioDTO);
         return  response;
     }
+
+    //CAMBIAR ESTATUS DE USUARIO
+    @PutMapping("/usuarios/estatus/{id}")
+    public ResponseEntity<UsuarioResponseRest> alternarEstatus(@PathVariable Long id) {
+        ResponseEntity<UsuarioResponseRest> response=service.cambiarEstatusUsuario(id);
+        return response;
+    }
+
+
 }

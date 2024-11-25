@@ -14,4 +14,5 @@ public interface IUsuarioService {
     public ResponseEntity<UsuarioResponseRest> iniciarSesion(String correo, String contrasenia);
     public ResponseEntity<UsuarioResponseRest> crearUsuario(Usuario usuario);
     public ResponseEntity<UsuarioResponseRest> actualizarUsuario(Long id, UsuarioDTO usuarioDTO);
+    public ResponseEntity<UsuarioResponseRest> cambiarEstatusUsuario(Long id);
 }

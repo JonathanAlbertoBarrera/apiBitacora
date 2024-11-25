@@ -267,4 +267,38 @@ public class UsuarioServiceImpl implements IUsuarioService{
     }
 
 
+    //PARA CAMBIAR ESTATUS A TRUE O FALSE SEGUN EL CASO
+    @Override
+    @Transactional
+    public ResponseEntity<UsuarioResponseRest> cambiarEstatusUsuario(Long id) {
+        UsuarioResponseRest response = new UsuarioResponseRest();
+
+        try {
+            // Buscar el usuario por ID
+            Optional<Usuario> usuarioExistente = usuarioDao.findById(id);
+            if (usuarioExistente.isEmpty()) {
+                response.setMetada("Error", "-1", "Usuario no encontrado");
+                return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            }
+
+            Usuario usuario = usuarioExistente.get();
+
+            // Alternar el estatus (toggle)
+            usuario.setEstatus(!usuario.isEstatus());
+
+            // Guardar el usuario actualizado
+            usuarioDao.save(usuario);
+
+            response.setMetada("Respuesta OK", "00", "Estatus de usuario actualizado exitosamente");
+        } catch (Exception e) {
+            response.setMetada("Error", "-1", "Error al actualizar el estatus del usuario");
+            e.printStackTrace();
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+
+
 }
