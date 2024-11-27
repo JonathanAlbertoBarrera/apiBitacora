@@ -1,8 +1,8 @@
 package org.example.apibitacora.model.dao;
 
-import org.example.apibitacora.model.Usuario;
+import org.example.apibitacora.model.Laboratorio;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ILaboratorioDao extends JpaRepository<Usuario,Long> {
+public interface ILaboratorioDao extends JpaRepository<Laboratorio,Long> {
 
 }
