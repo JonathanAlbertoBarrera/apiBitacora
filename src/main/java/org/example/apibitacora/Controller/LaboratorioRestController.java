@@ -28,5 +28,14 @@ public class LaboratorioRestController {
         return response;
     }
 
+    //ACTUALIZAR LABORATORIO
+    @PutMapping("/labs/{id}")
+    public ResponseEntity<LaboratorioResponseRest> actualizar(@RequestBody Laboratorio laboratorio, @PathVariable Long id){
+        ResponseEntity<LaboratorioResponseRest> response=service.actualizar(laboratorio,id);
+        return response;
+    }
+
+
+
 
 }

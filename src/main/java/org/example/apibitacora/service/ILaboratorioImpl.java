@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ILaboratorioImpl implements ILaboratorioService{
@@ -59,5 +60,47 @@ public class ILaboratorioImpl implements ILaboratorioService{
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    //actualizar laboratorio
+    @Override
+    @Transactional
+    public ResponseEntity<LaboratorioResponseRest> actualizar(Laboratorio laboratorio, Long id) {
+        LaboratorioResponseRest response = new LaboratorioResponseRest();
+        List<Laboratorio> list = new ArrayList<>();
+
+        try {
+
+            Optional<Laboratorio> labBuscado = laboratorioDao.findById(id);
+
+            if (labBuscado.isPresent()) {
+                labBuscado.get().setId_lab(laboratorio.getId_lab());
+                labBuscado.get().setDocencia(laboratorio.getDocencia());
+                labBuscado.get().setNombre_lab(laboratorio.getNombre_lab());
+                labBuscado.get().setEstatus(laboratorio.isEstatus());
+
+                Laboratorio laboratorioActualizar = laboratorioDao.save(labBuscado.get());
+
+                if( laboratorioActualizar != null ) {
+                    response.setMetada("Respuesta ok", "00", "Laboratorio actualizado");
+                    list.add(laboratorioActualizar);
+                    response.getLaboratorioResponse().setLaboratorios(list);
+                } else {
+                    response.setMetada("Respuesta nok", "-1", "Laboratorio no actualizado");
+                    return new ResponseEntity<LaboratorioResponseRest>(response, HttpStatus.BAD_REQUEST);
+                }
+
+
+            } else {
+                response.setMetada("Respuesta no ok", "-1", "laboratorio no actualizado");
+                return new ResponseEntity<LaboratorioResponseRest>(response, HttpStatus.NOT_FOUND);
+            }
+
+        } catch ( Exception e) {
+            e.getStackTrace();
+            response.setMetada("Respuesta no ok", "-1", "Laboratorio no actualizado");
+            return new ResponseEntity<LaboratorioResponseRest>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<LaboratorioResponseRest>(response, HttpStatus.OK);
     }
 }
