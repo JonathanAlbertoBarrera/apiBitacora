@@ -3,6 +3,7 @@ package org.example.apibitacora.model;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Table(name = "alumnos")
@@ -20,6 +21,17 @@ public class Usuario implements Serializable {
     private String contrasenia;
     private String rol;
     private boolean estatus;
+
+    @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Registro> registros;
+
+    public List<Registro> getRegistros() {
+        return registros;
+    }
+
+    public void setRegistros(List<Registro> registros) {
+        this.registros = registros;
+    }
 
     public Long getId_usuario() {
         return id_usuario;

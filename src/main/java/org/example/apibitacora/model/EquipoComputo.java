@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Table(name="equiposcomputo")
@@ -19,6 +20,18 @@ public class EquipoComputo implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Laboratorio laboratorio;
+
+
+    @OneToMany(mappedBy = "equipoComputo", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Registro> registros;
+
+    public List<Registro> getRegistros() {
+        return registros;
+    }
+
+    public void setRegistros(List<Registro> registros) {
+        this.registros = registros;
+    }
 
     public Long getId_equipo() {
         return id_equipo;
