@@ -16,8 +16,15 @@ public class LaboratorioRestController {
 
     //TODOS LOS LABS
     @GetMapping("/labsAll")
-    public ResponseEntity<LaboratorioResponseRest> getAllUsuarios(){
+    public ResponseEntity<LaboratorioResponseRest> getAllLabs(){
         ResponseEntity<LaboratorioResponseRest> response=service.getAllLabs();
+        return response;
+    }
+
+    //LABS ACTIVOS
+    @GetMapping("/labs")
+    public ResponseEntity<LaboratorioResponseRest> getAllLabsActivos(){
+        ResponseEntity<LaboratorioResponseRest> response=service.getAllLabsActivos();
         return response;
     }
 

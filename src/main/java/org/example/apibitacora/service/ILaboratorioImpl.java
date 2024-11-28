@@ -39,6 +39,24 @@ public class ILaboratorioImpl implements ILaboratorioService{
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    //LABORATORIOS ACTIVOS
+    @Override
+    @Transactional(readOnly = true)
+    public ResponseEntity<LaboratorioResponseRest> getAllLabsActivos() {
+        LaboratorioResponseRest response = new LaboratorioResponseRest();
+
+        try {
+            List<Laboratorio> laboratorios=laboratorioDao.findAllByEstatusTrue();
+            response.getLaboratorioResponse().setLaboratorios(laboratorios);
+            response.setMetada("Ok", "00", "Laboratorios activos encontrados");
+        } catch (Exception e) {
+            response.setMetada("Error", "-1", "Error al encontrar laboratorios activos");
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     //CREAR LABORATORIO
     @Override
     @Transactional
