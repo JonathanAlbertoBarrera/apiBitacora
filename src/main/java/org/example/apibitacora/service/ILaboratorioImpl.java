@@ -1,8 +1,10 @@
 package org.example.apibitacora.service;
 
 import org.example.apibitacora.model.Laboratorio;
+import org.example.apibitacora.model.Usuario;
 import org.example.apibitacora.model.dao.ILaboratorioDao;
 import org.example.apibitacora.response.LaboratorioResponseRest;
+import org.example.apibitacora.response.UsuarioResponseRest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -102,5 +104,37 @@ public class ILaboratorioImpl implements ILaboratorioService{
             return new ResponseEntity<LaboratorioResponseRest>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<LaboratorioResponseRest>(response, HttpStatus.OK);
+    }
+
+    //cambiar estatus del laboratorio
+    @Override
+    @Transactional
+    public ResponseEntity<LaboratorioResponseRest> cambiarEstatus(Long id) {
+        LaboratorioResponseRest response = new LaboratorioResponseRest();
+
+        try {
+            // Buscar el laboratorio por ID
+            Optional<Laboratorio> laboratorioExistente = laboratorioDao.findById(id);
+            if (laboratorioExistente.isEmpty()) {
+                response.setMetada("Error", "-1", "Laboratorio no encontrado");
+                return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            }
+
+            Laboratorio laboratorio = laboratorioExistente.get();
+
+            // Alternar el estatus
+            laboratorio.setEstatus(!laboratorio.isEstatus());
+
+            // Guardar el lab actualizado
+            laboratorioDao.save(laboratorio);
+
+            response.setMetada("Respuesta OK", "00", "Estatus de laboratorio actualizado exitosamente");
+        } catch (Exception e) {
+            response.setMetada("Error", "-1", "Error al actualizar el estatus del laboratorio");
+            e.printStackTrace();
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

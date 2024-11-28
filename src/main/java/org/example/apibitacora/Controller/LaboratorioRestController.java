@@ -35,6 +35,13 @@ public class LaboratorioRestController {
         return response;
     }
 
+    //CAMBIAR ESTADO DE UN LABORATORIO
+    @PutMapping("/labsModi/{id}")
+    public ResponseEntity<LaboratorioResponseRest> cambiarEstatus(@PathVariable Long id){
+        ResponseEntity<LaboratorioResponseRest> response=service.cambiarEstatus(id);
+        return response;
+    }
+
 
 
 
