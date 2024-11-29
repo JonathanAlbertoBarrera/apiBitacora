@@ -6,26 +6,24 @@ import org.example.apibitacora.response.RegistroResponseRest;
 import org.example.apibitacora.service.IRegistroService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-@RestController("/api")
+@RestController()
+@RequestMapping("/api")
 public class RegistroRestController {
 
     @Autowired
     private IRegistroService service;
 
     //TODOS LOS REGISTROS
-    @GetMapping("/Registros")
+    @GetMapping("/registros")
     public ResponseEntity<RegistroResponseRest> getAllRegistros(){
         ResponseEntity<RegistroResponseRest> response=service.getAllRegistros();
         return response;
     }
 
     //CREAR LOS REGISTROS
-    @PostMapping("/Registros")
+    @PostMapping("/registros")
     public ResponseEntity<RegistroResponseRest> crearRegistro(@RequestBody Registro registro){
         ResponseEntity<RegistroResponseRest> response=service.crearRegistro(registro);
         return response;

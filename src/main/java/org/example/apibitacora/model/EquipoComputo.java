@@ -14,24 +14,13 @@ public class EquipoComputo implements Serializable {
     private Long id_equipo;
 
     private int numeroEnLab; //por ejemplo: 07. ES LA NUMERACION EN LA VIDA REAL QUE TIENEN LAS PC
-    private String valorCodigo; //al escanear el QR, es lo que se obtiene
-    private boolean estatus;
+    private String codigo; //al escanear el QR, es lo que se obtiene
+    private boolean status;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Laboratorio laboratorio;
 
-
-    @OneToMany(mappedBy = "equipoComputo", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Registro> registros;
-
-    public List<Registro> getRegistros() {
-        return registros;
-    }
-
-    public void setRegistros(List<Registro> registros) {
-        this.registros = registros;
-    }
 
     public Long getId_equipo() {
         return id_equipo;
@@ -49,20 +38,20 @@ public class EquipoComputo implements Serializable {
         this.numeroEnLab = numeroEnLab;
     }
 
-    public String getValorCodigo() {
-        return valorCodigo;
+    public String getCodigo() {
+        return codigo;
     }
 
-    public void setValorCodigo(String valorCodigo) {
-        this.valorCodigo = valorCodigo;
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
     }
 
-    public boolean isEstatus() {
-        return estatus;
+    public boolean isStatus() {
+        return status;
     }
 
-    public void setEstatus(boolean estatus) {
-        this.estatus = estatus;
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 
     public Laboratorio getLaboratorio() {

@@ -1,5 +1,6 @@
 package org.example.apibitacora.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -15,14 +16,17 @@ public class Registro implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "matricula_alumno", nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "registros"}) // Evita bucles con usuario
     private Usuario usuario; // Relación con el alumno (usuario)
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_lab", nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "registros", "equiposComputo"}) // Evita bucles con laboratorio
     private Laboratorio laboratorio; // Relación con el laboratorio
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_equipo", nullable = false)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "registros", "laboratorio"}) // Evita bucles con equipo de cómputo
     private EquipoComputo equipoComputo; // Relación con el equipo de cómputo
 
     @Column(nullable = false)
