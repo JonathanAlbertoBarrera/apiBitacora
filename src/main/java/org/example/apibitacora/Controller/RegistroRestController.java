@@ -22,6 +22,13 @@ public class RegistroRestController {
         return response;
     }
 
+    //OBTENER UN REGISTRO POR ID
+    @GetMapping("/registros/{id_registro}")
+    public ResponseEntity<RegistroResponseRest> obtenerRegistrobyId(@PathVariable Long id_registro){
+        ResponseEntity<RegistroResponseRest> response=service.obtenerRegistrobyId(id_registro);
+        return response;
+    }
+
     //CREAR LOS REGISTROS
     @PostMapping("/registros")
     public ResponseEntity<RegistroResponseRest> crearRegistro(@RequestBody Registro registro){

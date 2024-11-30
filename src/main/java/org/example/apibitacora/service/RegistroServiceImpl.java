@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class RegistroServiceImpl implements IRegistroService{
@@ -31,6 +32,32 @@ public class RegistroServiceImpl implements IRegistroService{
             response.setMetada("Ok", "00", "Registros encontrados");
         } catch (Exception e) {
             response.setMetada("Error", "-1", "Error al encontrar los registros");
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    //Obtener un registro POR ID
+    @Override
+    @Transactional
+    public ResponseEntity<RegistroResponseRest> obtenerRegistrobyId(Long id_registro){
+        RegistroResponseRest response = new RegistroResponseRest();
+        List<Registro> list = new ArrayList<>();
+
+        try {
+            Optional<Registro> registro = registroDao.findById(id_registro);
+            if (registro.isPresent()) {
+                list.add(registro.get());
+                response.getRegistroResponse().setRegistros(list);
+                response.setMetada("Respuesta OK", "00", "Registro encontrado");
+            } else {
+                response.setMetada("Respuesta No Encontrada", "-1", "Registro no encontrado");
+                return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            response.setMetada("Error", "-1", "Error al consultar registro por ID");
+            e.printStackTrace();
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 

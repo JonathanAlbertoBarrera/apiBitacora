@@ -6,5 +6,6 @@ import org.springframework.http.ResponseEntity;
 
 public interface IRegistroService {
     public ResponseEntity<RegistroResponseRest> getAllRegistros();
+    public ResponseEntity<RegistroResponseRest> obtenerRegistrobyId(Long id_registro);
     public ResponseEntity<RegistroResponseRest> crearRegistro(Registro registro);
 }
